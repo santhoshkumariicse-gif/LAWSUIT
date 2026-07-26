@@ -17,7 +17,10 @@ const _env = envSchema.safeParse(process.env);
 if (!_env.success) {
   console.error("❌ Invalid environment variables:");
   console.error(_env.error.format());
-  throw new Error("Invalid environment variables. Application failed to boot securely.");
+  // Do not crash the static build phase on Vercel
+  if (process.env.npm_lifecycle_event !== "build" && process.env.NEXT_PHASE !== "phase-production-build") {
+    throw new Error("Invalid environment variables. Application failed to boot securely.");
+  }
 }
 
 export const env = _env.data;
