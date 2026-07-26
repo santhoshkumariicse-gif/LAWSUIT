@@ -3,7 +3,7 @@ import { z } from "zod";
 const envSchema = z.object({
   NODE_ENV: z.enum(["development", "testing", "staging", "production"]).default("development"),
   NEXTAUTH_SECRET: z.string().min(1, "NEXTAUTH_SECRET is strictly required for session security."),
-  NEXTAUTH_URL: z.string().url("NEXTAUTH_URL must be a valid URL."),
+  NEXTAUTH_URL: z.string().url().optional(),
   DATABASE_URL: z.string().url("DATABASE_URL is required to connect to the database."),
   GEMINI_API_KEY: z.string().min(1, "GEMINI_API_KEY is required for the AI legal engine."),
   PINECONE_API_KEY: z.string().min(1, "PINECONE_API_KEY is required for Vector DB RAG."),
