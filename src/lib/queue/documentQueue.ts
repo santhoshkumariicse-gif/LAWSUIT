@@ -3,7 +3,7 @@ import Redis from "ioredis";
 import { env } from "../env";
 
 // Configure Redis connection
-export const connection = new Redis(env.REDIS_URL, {
+export const connection = new Redis(env.REDIS_URL || "redis://localhost:6379", {
   maxRetriesPerRequest: null,
 });
 

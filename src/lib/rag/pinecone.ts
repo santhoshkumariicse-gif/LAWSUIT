@@ -9,7 +9,7 @@ const globalForPinecone = globalThis as unknown as {
 export const pinecone =
   globalForPinecone.pinecone ??
   new Pinecone({
-    apiKey: env.PINECONE_API_KEY,
+    apiKey: env.PINECONE_API_KEY || "dummy",
   });
 
 if (env.NODE_ENV !== "production") globalForPinecone.pinecone = pinecone;

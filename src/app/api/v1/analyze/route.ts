@@ -17,7 +17,7 @@ import { logger } from "@/lib/logger";
 import { redis } from "@/lib/redis";
 
 // Initialize Gemini Client (Requires GEMINI_API_KEY in environment)
-const ai = new GoogleGenAI({ apiKey: env.GEMINI_API_KEY });
+const ai = new GoogleGenAI({ apiKey: env.GEMINI_API_KEY || "dummy" });
 
 const AnalyzeInputSchema = z.object({
   issue_text: z.string().min(10).max(5000),

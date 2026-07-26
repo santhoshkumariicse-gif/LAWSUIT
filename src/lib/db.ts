@@ -10,8 +10,8 @@ const globalForPrisma = globalThis as unknown as {
 // If we are in production, we append ?pgbouncer=true to the DATABASE_URL
 // to instruct Prisma not to use prepared statements, which conflict with PgBouncer.
 const getDatabaseUrl = () => {
-  let url = config.db.url;
-  if (config.isProd && !url.includes("pgbouncer=true")) {
+  let url = config.db.url || "";
+  if (config.isProd && url && !url.includes("pgbouncer=true")) {
     const separator = url.includes("?") ? "&" : "?";
     url += `${separator}pgbouncer=true&connection_limit=1`; // Limit connections in serverless cold starts
   }
