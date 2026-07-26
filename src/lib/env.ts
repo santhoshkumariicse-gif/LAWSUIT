@@ -23,7 +23,7 @@ if (!_env.success) {
   }
 }
 
-export const env = _env.data;
+export const env = _env.success ? _env.data : (process.env as any);
 
 export const config = {
   isDev: env.NODE_ENV === "development",
