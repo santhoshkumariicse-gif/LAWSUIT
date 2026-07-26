@@ -1,0 +1,14 @@
+{
+  "Navbar": {
+    "title": "LawGuide AI India",
+    "subtitle": "AI Legal Guidance Platform",
+    "home": "Home",
+    "assistant": "Legal Assistant",
+    "practiceAreas": "Practice Areas",
+    "practiceMode": "Practice Mode",
+    "resources": "Resources",
+    "contact": "Contact",
+    "startAnalysis": "Start Legal Analysis",
+    "signIn": "Sign In"
+  }
+}

@@ -1,0 +1,108 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Role {
+  USER
+  LAWYER
+  ENTERPRISE_ADMIN
+  SYSTEM_ADMIN
+}
+
+model User {
+  id               String            @id @default(uuid())
+  email            String            @unique
+  passwordHash     String
+  role             Role              @default(USER)
+  failedLoginAttempts Int            @default(0)
+  lockedUntil      DateTime?
+  consentGiven     Boolean           @default(false)
+  consentDate      DateTime?
+  mfaEnabled       Boolean           @default(false)
+  mfaSecret        String?
+  createdAt        DateTime          @default(now())
+  queries          Query[]
+  practiceSessions PracticeSession[]
+  documents        Document[]
+
+  @@index([email])
+}
+
+model Query {
+  id             String        @id @default(uuid())
+  userId         String
+  user           User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  rawInput       String
+  inferredMatter String
+  createdAt      DateTime      @default(now())
+  results        QueryResult[]
+  documents      Document[]
+
+  @@index([userId])
+  @@index([userId, createdAt(sort: Desc)])
+  @@index([inferredMatter])
+}
+
+model QueryResult {
+  id           String @id @default(uuid())
+  queryId      String
+  query        Query  @relation(fields: [queryId], references: [id], onDelete: Cascade)
+  analysisData Json
+
+  @@index([queryId])
+}
+
+model PracticeSession {
+  id              String        @id @default(uuid())
+  userId          String
+  user            User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  matterType      String
+  completionScore Int           @default(0)
+  logs            PracticeLog[]
+
+  @@index([userId])
+  @@index([userId, completionScore(sort: Desc)])
+}
+
+model PracticeLog {
+  id             String          @id @default(uuid())
+  sessionId      String
+  session        PracticeSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  questionAsked  String
+  userAnswer     String
+  systemFeedback String
+  createdAt      DateTime        @default(now())
+
+  @@index([sessionId])
+}
+
+model AuditLog {
+  id        String   @id @default(uuid())
+  userId    String
+  action    String
+  metadata  Json
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+}
+
+model Document {
+  id           String   @id @default(uuid())
+  userId       String
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  queryId      String?
+  query        Query?   @relation(fields: [queryId], references: [id], onDelete: SetNull)
+  fileName     String
+  fileSize     Int
+  mimeType     String
+  storageUrl   String
+  documentType String   @default("general")
+  createdAt    DateTime @default(now())
+
+  @@index([userId])
+  @@index([queryId])
+}
